@@ -52,6 +52,26 @@ def index():
     return render_template('index.html')
 
 
+# Route to generate .bat file for yt-dlp
+@app.route('/bat')
+def bat_file():
+    url = request.args.get('url', '').strip()
+    bat_content = (
+        '@echo off\n'
+        'yt-dlp -f bestvideo+bestaudio --merge-output-format mp4 "{url}"\n'
+        'pause\n'
+    ).format(url=url)
+    # Write to temp file and send, or send as attachment
+    from io import BytesIO
+    bat_bytes = BytesIO(bat_content.encode('utf-8'))
+    return send_file(
+        bat_bytes,
+        as_attachment=True,
+        download_name='download.bat',
+        mimetype='application/octet-stream'
+    )
+
+
 @app.route('/download', methods=['POST'])
 @limiter.limit("5 per minute")
 def download():

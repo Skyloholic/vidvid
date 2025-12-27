@@ -58,12 +58,14 @@ button:disabled {
     </select>
 
     <button id="btn">Download</button>
+    <button id="bat-btn" style="margin-top:8px;background:#764ba2;">Download with yt-dlp (.bat)</button>
     <div id="msg"></div>
 </div>
 
 <script>
 const btn = document.getElementById('btn');
 const msg = document.getElementById('msg');
+const batBtn = document.getElementById('bat-btn');
 
 btn.onclick = async () => {
     const url = document.getElementById('url').value;
@@ -108,6 +110,23 @@ btn.onclick = async () => {
     } finally {
         btn.disabled = false;
     }
+};
+
+batBtn.onclick = () => {
+    const url = document.getElementById('url').value.trim();
+    if (!url.startsWith('http')) {
+        msg.textContent = "Invalid URL for .bat";
+        return;
+    }
+    // Download .bat file with video URL as argument
+    const batUrl = `/bat?url=${encodeURIComponent(url)}`;
+    const a = document.createElement('a');
+    a.href = batUrl;
+    a.download = 'download.bat';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    msg.textContent = ".bat file downloaded. Double-click to start yt-dlp.";
 };
 </script>
 </body>
