@@ -90,7 +90,10 @@ def download():
             'http_headers': {
                 'User-Agent': 'Mozilla/5.0',
                 'Referer': 'https://www.pinterest.com/'
-            }
+            },
+
+            # YouTube anti-bot fix
+            'extractor_args': {'youtube': {'player_client': ['tv', 'web']}},
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
